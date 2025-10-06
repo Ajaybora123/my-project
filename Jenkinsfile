@@ -38,12 +38,6 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            node {
-                echo "🧹 Cleaning workspace..."
-                deleteDir()
-            }
-        }
+   
     }
-}
+
