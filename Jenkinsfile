@@ -11,7 +11,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 echo "🔹 Cloning Terraform code from GitHub..."
-                git  'https://github.com/Ajaybora123/my-project.git'
+                git   branch: 'main', url: 'https://github.com/Ajaybora123/my-project.git'
             }
         }
 
