@@ -7,11 +7,11 @@ pipeline {
     }
 
     stages {
-
+        // Optional: remove this if job SCM already checks out code
         stage('Checkout Code') {
             steps {
                 echo "🔹 Cloning Terraform code from GitHub..."
-                git 'https://github.com/YOUR_USERNAME/terraform-demo.git'
+                git branch: 'main', url: ''
             }
         }
 
@@ -31,19 +31,19 @@ pipeline {
 
         stage('Terraform Apply') {
             steps {
-                script {
-                    def userInput = input message: 'Apply Terraform changes?', ok: 'Yes, apply'
-                    echo "🔹 Applying Terraform..."
-                    sh 'terraform apply -auto-approve tfplan'
-                }
+                input message: 'Apply Terraform changes?', ok: 'Yes, apply'
+                echo "🔹 Applying Terraform..."
+                sh 'terraform apply -auto-approve tfplan'
             }
         }
     }
 
     post {
         always {
-            echo "🧹 Cleaning workspace..."
-            deleteDir()
+            node {
+                echo "🧹 Cleaning workspace..."
+                deleteDir()
+            }
         }
     }
 }
