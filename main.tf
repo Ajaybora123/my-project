@@ -1,45 +1,8 @@
-pipeline {
-    agent any
+provider "aws" {
+  region = "us-east-1"
+}
 
-    environment {
-        AWS_ACCESS_KEY_ID     = credentials('aws-access-key')
-        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
-    }
-
-    stages {
-        stage('Checkout Code') {
-            steps {
-                echo "🔹 Cloning Terraform code..."
-                git 'https://github.com/Ajaybora123/my-project.git'
-            }
-        }
-
-        stage('Terraform Init') {
-            steps {
-                echo "🔹 Initializing Terraform..."
-                sh 'terraform init'
-            }
-        }
-
-        stage('Terraform Plan') {
-            steps {
-                echo "🔹 Generating Terraform plan..."
-                sh 'terraform plan -out=tfplan'
-            }
-        }
-
-        stage('Terraform Apply') {
-            steps {
-                input message: 'Apply Terraform changes?', ok: 'Yes, apply'
-                sh 'terraform apply -auto-approve tfplan'
-            }
-        }
-    }
-
-    post {
-        always {
-            echo "🧹 Cleaning workspace..."
-            deleteDir()
-        }
-    }
+resource "aws_s3_bucket" "demo_bucket" {
+  bucket = "my-demo-bucket-12345"
+  acl    = "private"
 }
