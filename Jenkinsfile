@@ -7,6 +7,13 @@ pipeline {
     }
 
     stages {
+        stage('Checkout Code') {
+            steps {
+                echo "🔹 Cloning Terraform code..."
+                git 'https://github.com/Ajaybora123/my-project.git'
+            }
+        }
+
         stage('Terraform Init') {
             steps {
                 echo "🔹 Initializing Terraform..."
@@ -31,10 +38,8 @@ pipeline {
 
     post {
         always {
-            node {
-                echo "🧹 Cleaning workspace..."
-                deleteDir()
-            }
+            echo "🧹 Cleaning workspace..."
+            deleteDir()
         }
     }
 }
