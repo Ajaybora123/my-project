@@ -1,29 +1,45 @@
-terraform {
-   agent any
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
+pipeline {
+    agent any
+
+    environment {
+        AWS_ACCESS_KEY_ID     = credentials('aws-access-key')
+        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
     }
-    random = {
-      source  = "hashicorp/random"
-      version = "~> 3.0"
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                echo "🔹 Cloning Terraform code..."
+                git 'https://github.com/Ajaybora123/my-project.git'
+            }
+        }
+
+        stage('Terraform Init') {
+            steps {
+                echo "🔹 Initializing Terraform..."
+                sh 'terraform init'
+            }
+        }
+
+        stage('Terraform Plan') {
+            steps {
+                echo "🔹 Generating Terraform plan..."
+                sh 'terraform plan -out=tfplan'
+            }
+        }
+
+        stage('Terraform Apply') {
+            steps {
+                input message: 'Apply Terraform changes?', ok: 'Yes, apply'
+                sh 'terraform apply -auto-approve tfplan'
+            }
+        }
     }
-  }
-}
 
-provider "aws" {
-  region = var.region
-}
-
-resource "random_id" "rand" {
-  byte_length = 4
-}
-
-resource "aws_s3_bucket" "demo_bucket" {
-  bucket = "jenkins-terraform-demo-${random_id.rand.hex}"
-}
-
-output "bucket_name" {
-  value = aws_s3_bucket.demo_bucket.bucket
+    post {
+        always {
+            echo "🧹 Cleaning workspace..."
+            deleteDir()
+        }
+    }
 }
