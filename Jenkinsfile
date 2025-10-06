@@ -7,13 +7,12 @@ pipeline {
     }
 
     stages {
-        stage('Checkout Code') {
-    steps {
-        echo "🔹 Cloning Terraform code..."
-        git branch: 'main', url: 'https://github.com/Ajaybora123/my-project.git'
-    }
-}
 
+        stage('Checkout Code') {
+            steps {
+                echo "🔹 Cloning Terraform code from GitHub..."
+                git 'https://github.com/YOUR_USERNAME/terraform-demo.git'
+            }
         }
 
         stage('Terraform Init') {
@@ -32,8 +31,11 @@ pipeline {
 
         stage('Terraform Apply') {
             steps {
-                input message: 'Apply Terraform changes?', ok: 'Yes, apply'
-                sh 'terraform apply -auto-approve tfplan'
+                script {
+                    def userInput = input message: 'Apply Terraform changes?', ok: 'Yes, apply'
+                    echo "🔹 Applying Terraform..."
+                    sh 'terraform apply -auto-approve tfplan'
+                }
             }
         }
     }
