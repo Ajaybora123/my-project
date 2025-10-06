@@ -3,6 +3,6 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "demo_bucket" {
-  bucket = "my-demo-bucket-4343"
+  bucket = "my-demo-bucket-yo90"
   acl    = "private"
 }
