@@ -8,10 +8,12 @@ pipeline {
 
     stages {
         stage('Checkout Code') {
-            steps {
-                echo "🔹 Cloning Terraform code..."
-                git 'https://github.com/Ajaybora123/my-project.git'
-            }
+    steps {
+        echo "🔹 Cloning Terraform code..."
+        git branch: 'main', url: 'https://github.com/Ajaybora123/my-project.git'
+    }
+}
+
         }
 
         stage('Terraform Init') {
