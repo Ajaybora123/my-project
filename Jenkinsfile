@@ -1,5 +1,5 @@
 pipeline {
-    agent 
+    agent any
 
     environment {
         AWS_ACCESS_KEY_ID     = credentials('aws-access-key')
@@ -7,11 +7,10 @@ pipeline {
     }
 
     stages {
-
         stage('Checkout Code') {
             steps {
-                echo "🔹 Cloning Terraform code from GitHub..."
-                git 'https://github.com/YOUR_USERNAME/terraform-demo.git'
+                echo "🔹 Cloning Terraform code..."
+                git 'https://github.com/Ajaybora123/my-project.git'
             }
         }
 
@@ -31,11 +30,8 @@ pipeline {
 
         stage('Terraform Apply') {
             steps {
-                script {
-                    def userInput = input message: 'Apply Terraform changes?', ok: 'Yes, apply'
-                    echo "🔹 Applying Terraform..."
-                    sh 'terraform apply -auto-approve tfplan'
-                }
+                input message: 'Apply Terraform changes?', ok: 'Yes, apply'
+                sh 'terraform apply -auto-approve tfplan'
             }
         }
     }
